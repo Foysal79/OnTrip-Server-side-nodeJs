@@ -30,11 +30,28 @@ async function run() {
     // await client.connect();
 
     const packageCollection = client.db("OntripDB").collection("package");
-    // package session
+    const userCollection = client.db("OntripDB").collection("users");
+
+
+    // package api
     app.post('/allpackges', async(req, res) => {
         const packages = req.body;
         const result = await packageCollection.insertOne(packages);
         res.send(result);
+    })
+
+
+    // user api 
+    app.post('/users', async(req, res) => {
+      const user = req.body;
+      const query = {email: user.email }
+      const existingUser = await userCollection.findOne(query);
+      if(existingUser)
+      {
+        return res.send({message: "user already exist", insertedId: null})
+      }
+      const result = await userCollection.insertOne(user);
+      res.send(result);
     })
 
 
