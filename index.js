@@ -100,6 +100,11 @@ async function run() {
         res.send(result);
     })
 
+    app.get('/allpackges', async(req, res) => {
+      const allPackages = await packageCollection.find().toArray();
+      res.send(allPackages); 
+    } )
+
 
     // user api 
     app.post('/users', async(req, res) => {
