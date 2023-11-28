@@ -106,6 +106,16 @@ async function run() {
     } )
 
 
+       /// single package
+       app.get('/singlePackages/:id', async(req, res) => {
+        const id = req.params.id;
+    const query = {_id : new ObjectId(id)};
+    const result = await packageCollection.findOne(query);
+    res.send(result);
+       } )
+
+
+
     // user api 
     app.post('/users', async(req, res) => {
       const user = req.body;
@@ -122,6 +132,13 @@ async function run() {
     app.get('/users', verifyToken, verifyAdmin, async(req, res) => {
       console.log(req.headers);
       const result = await userCollection.find().toArray();
+      res.send(result);
+
+    } )
+
+    app.get('/users/allGuid', async(req, res) => {
+      console.log(req.headers);
+      const result = await userCollection.find({role : 'guid'}).toArray();
       res.send(result);
 
     } )
