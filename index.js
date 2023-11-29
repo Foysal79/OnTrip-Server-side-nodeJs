@@ -108,13 +108,7 @@ async function run() {
 
     // booking packages
 
-    // app.get('/bookedPackges', async(req, res) => {
-
-    //   const email = req.req.email;
-    //   const query = { email : touristEmail};
-    //   const result = await bookingCollection.find().toArray();
-    //   res.send(result);
-    // } )
+    
 
     app.get('/bookedPackges', verifyToken,   async(req, res) => {
     
@@ -133,6 +127,31 @@ async function run() {
       
   
      })
+
+
+    //  status upadte
+    app.patch('/bookedPackges/:id', async(req, res) => {
+      const id = req.params.id;
+      const filter = {_id : new ObjectId(id)};
+      const updatedBooking = req.body;
+      console.log(updatedBooking);
+      const updateDoc = {
+        $set: {
+          status : updatedBooking.status,
+        }
+      }
+      const result = await bookingCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    
+    
+    
+     } )
+
+
+
+
+
+
     //  guid assigned tour
     app.get('/assignedTour',  async(req, res) => {
     
@@ -155,13 +174,22 @@ async function run() {
 
 
 
-
+// booking packages
     app.post('/bookedPackges', async(req, res) => {
       const bookingPackges = req.body;
       const result = await bookingCollection.insertOne(bookingPackges);
       res.send(result);
 
     } )
+
+    // booking packages debated
+    app.delete('/bookedPackges/:id', async(req, res) => {
+      const id = req.params.id;
+      console.log('data base delate id is : ', id);
+      const query = { _id: new ObjectId(id)};
+      const result = await bookingCollection.deleteOne(query);
+      res.send(result);
+     } )
 
 
        /// single package
