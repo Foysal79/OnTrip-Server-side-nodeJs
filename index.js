@@ -106,6 +106,56 @@ async function run() {
       res.send(allPackages); 
     } )
 
+    // booking packages
+
+    // app.get('/bookedPackges', async(req, res) => {
+
+    //   const email = req.req.email;
+    //   const query = { email : touristEmail};
+    //   const result = await bookingCollection.find().toArray();
+    //   res.send(result);
+    // } )
+
+    app.get('/bookedPackges', verifyToken,   async(req, res) => {
+    
+    
+      let query = {};
+      if(req.query.email)
+      {
+        query = {
+          touristEmail: req.query.email ,
+        }
+      }
+      console.log("query", query);
+      const cursor = bookingCollection.find(query);
+      const results = await cursor.toArray();
+      res.send(results);
+      
+  
+     })
+    //  guid assigned tour
+    app.get('/assignedTour',  async(req, res) => {
+    
+    
+      let query = {};
+      if(req.query.email)
+      {
+        query = {
+          
+          Guid: req.query.email ,
+        }
+      }
+      
+      const cursor = bookingCollection.find(query);
+      const results = await cursor.toArray();
+      res.send(results);
+      
+  
+     })
+
+
+
+
     app.post('/bookedPackges', async(req, res) => {
       const bookingPackges = req.body;
       const result = await bookingCollection.insertOne(bookingPackges);
