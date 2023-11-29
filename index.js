@@ -31,6 +31,7 @@ async function run() {
 
     const packageCollection = client.db("OntripDB").collection("package");
     const userCollection = client.db("OntripDB").collection("users");
+    const bookingCollection = client.db("OntripDB").collection("bookedPakages");
 
     // jwt api 
     app.post('/jwt', async(req, res) => {
@@ -103,6 +104,13 @@ async function run() {
     app.get('/allpackges', async(req, res) => {
       const allPackages = await packageCollection.find().toArray();
       res.send(allPackages); 
+    } )
+
+    app.post('/bookedPackges', async(req, res) => {
+      const bookingPackges = req.body;
+      const result = await bookingCollection.insertOne(bookingPackges);
+      res.send(result);
+
     } )
 
 
