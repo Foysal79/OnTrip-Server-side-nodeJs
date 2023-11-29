@@ -135,13 +135,21 @@ async function run() {
       res.send(result);
 
     } )
-
+      //  guide session
     app.get('/users/allGuid', async(req, res) => {
       console.log(req.headers);
       const result = await userCollection.find({role : 'guid'}).toArray();
       res.send(result);
 
     } )
+
+    app.get('/guid/:id', async(req, res) => {
+      const id = req.params.id;
+  const query = {_id : new ObjectId(id)};
+  const result = await userCollection.findOne(query);
+  res.send(result);
+     } )
+
    /// verify admin
     app.get('/users/admin/:email', verifyToken,   async(req, res) => {
       const email = req.params.email;
