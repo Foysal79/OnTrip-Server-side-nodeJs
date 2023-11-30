@@ -102,7 +102,7 @@ async function run() {
         const result = await packageCollection.insertOne(packages);
         res.send(result);
     })
-    
+
       // all story post 
     app.post('/allStory', async(req, res) => {
         const packages = req.body;
@@ -114,6 +114,12 @@ async function run() {
 
     app.get('/allpackges', async(req, res) => {
       const allPackages = await packageCollection.find().toArray();
+      res.send(allPackages); 
+    } )
+
+    // all story
+    app.get('/allStory', async(req, res) => {
+      const allPackages = await storyCollection.find().toArray();
       res.send(allPackages); 
     } )
 
