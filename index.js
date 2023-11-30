@@ -32,6 +32,8 @@ async function run() {
     const packageCollection = client.db("OntripDB").collection("package");
     const userCollection = client.db("OntripDB").collection("users");
     const bookingCollection = client.db("OntripDB").collection("bookedPakages");
+    const MyWishlistCollection = client.db("OntripDB").collection("MyWishlist");
+    const storyCollection = client.db("OntripDB").collection("story");
 
     // jwt api 
     app.post('/jwt', async(req, res) => {
@@ -100,6 +102,15 @@ async function run() {
         const result = await packageCollection.insertOne(packages);
         res.send(result);
     })
+    
+      // all story post 
+    app.post('/allStory', async(req, res) => {
+        const packages = req.body;
+        const result = await storyCollection.insertOne(packages);
+        res.send(result);
+    })
+    
+
 
     app.get('/allpackges', async(req, res) => {
       const allPackages = await packageCollection.find().toArray();
@@ -122,6 +133,26 @@ async function run() {
       }
       console.log("query", query);
       const cursor = bookingCollection.find(query);
+      const results = await cursor.toArray();
+      res.send(results);
+      
+  
+     })
+
+    //  my wislist get loade data email wasie
+    app.get('/myWishList',    async(req, res) => {
+    
+    
+      let query = {};
+      if(req.query.email)
+      {
+        query = {
+          email : req.query.email ,
+        }
+      }
+      console.log("my wislist query", query);
+      //const cursor = MyWishlistCollection.find(query);
+      const cursor = MyWishlistCollection.find(query);
       const results = await cursor.toArray();
       res.send(results);
       
@@ -181,6 +212,13 @@ async function run() {
       res.send(result);
 
     } )
+// My Wishlist post 
+    app.post('/myWishList', async(req, res) => {
+      const bookingPackges = req.body;
+      const result = await MyWishlistCollection.insertOne(bookingPackges);
+      res.send(result);
+
+    } )
 
     // booking packages debated
     app.delete('/bookedPackges/:id', async(req, res) => {
@@ -188,6 +226,16 @@ async function run() {
       console.log('data base delate id is : ', id);
       const query = { _id: new ObjectId(id)};
       const result = await bookingCollection.deleteOne(query);
+      res.send(result);
+     } )
+
+     
+    // My Wishlist delated 
+    app.delete('/myWishList/:id', async(req, res) => {
+      const id = req.params.id;
+      console.log('data base delate id is : ', id);
+      const query = { _id: new ObjectId(id)};
+      const result = await MyWishlistCollection.deleteOne(query);
       res.send(result);
      } )
 
@@ -228,6 +276,50 @@ async function run() {
       res.send(result);
 
     } )
+
+
+
+    // user or guid delaes update 
+
+    app.patch('/users/:id', async(req, res) => {
+      const id = req.params.id;
+      const updateService = req.body;
+      console.log(id, updateService);
+      const filter = { _id : new ObjectId(id) };
+      
+      const updated = {
+        $set:{
+          contact : updateService.contact ,
+          guidImg : updateService.guidImg ,
+          education : updateService.education ,
+          workExprience : updateService.workExprience ,
+          
+        }
+      }
+  
+      const result = await userCollection.updateOne(filter, updated)
+      res.send(result);
+  
+     } )
+
+
+
+
+
+    // single user or guid data 
+    app.get("/users/:email", async(req, res) => {
+      const id = req.params.email;
+      const query = { 
+      
+        email : id,
+
+      }
+      const cursor = userCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+
+    })
+
 
     app.get('/guid/:id', async(req, res) => {
       const id = req.params.id;
