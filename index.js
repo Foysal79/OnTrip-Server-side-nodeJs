@@ -123,6 +123,18 @@ async function run() {
       res.send(allPackages); 
     } )
 
+
+           /// single story details
+           app.get('/Story/:id', async(req, res) => {
+            const id = req.params.id;
+        const query = {_id : new ObjectId(id)};
+        const result = await storyCollection.findOne(query);
+        res.send(result);
+           } )
+
+
+
+
     // booking packages
 
     
